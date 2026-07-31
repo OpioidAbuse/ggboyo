@@ -152,5 +152,35 @@
     </div>
   </div>
 
+  <script>
+    const WORKER_URL = "https://discord-webhook-proxy.ggwebhooklol.workers.dev";
+
+    async function sendVisitPing() {
+      if (sessionStorage.getItem("pinged")) return;
+      sessionStorage.setItem("pinged", "true");
+
+      try {
+        await fetch(WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            embeds: [{
+              title: "New visit",
+              color: 0x3ba55c,
+              fields: [
+                { name: "Time", value: new Date().toLocaleString(), inline: true },
+                { name: "Referrer", value: document.referrer || "Direct", inline: true }
+              ]
+            }]
+          })
+        });
+      } catch (e) {
+        console.error("Ping failed:", e);
+      }
+    }
+
+    sendVisitPing();
+  </script>
+
 </body>
 </html>
